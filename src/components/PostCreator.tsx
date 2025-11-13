@@ -5,6 +5,8 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent } from "@/components/ui/card";
 import { showError, showSuccess } from "@/utils/toast";
+import { Camera, Smile, MapPin } from "lucide-react";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 
 const PostCreator = () => {
   const { session } = useSession();
@@ -82,30 +84,42 @@ const PostCreator = () => {
   };
 
   return (
-    <Card className="mb-6">
+    <Card className="mb-6 shadow-sm hover:shadow-md transition-shadow duration-300">
       <CardContent className="p-4">
         <form onSubmit={handleSubmit}>
-          <div className="mb-4">
+          {/* User Avatar and Textarea */}
+          <div className="flex mb-4">
+            <Avatar className="mr-3">
+              <AvatarFallback className="bg-gradient-to-br from-purple-400 to-pink-500 text-white">
+                {session?.user.email?.charAt(0).toUpperCase() || "U"}
+              </AvatarFallback>
+            </Avatar>
             <Textarea
-              placeholder="Write a caption..."
+              placeholder="What's on your mind?"
               value={caption}
               onChange={(e) => setCaption(e.target.value)}
-              className="mb-4"
+              className="flex-1 resize-none border-0 p-0 text-base focus:ring-0"
+              rows={2}
             />
-            
-            {previewUrl && (
-              <div className="mb-4">
-                <img 
-                  src={previewUrl} 
-                  alt="Preview" 
-                  className="w-full h-64 object-cover rounded-md"
-                />
-              </div>
-            )}
-            
-            <div className="flex items-center justify-between">
-              <label className="cursor-pointer bg-gray-100 hover:bg-gray-200 rounded-md px-4 py-2 text-sm">
-                Choose Image
+          </div>
+
+          {/* Image Preview */}
+          {previewUrl && (
+            <div className="mb-4 rounded-lg overflow-hidden border border-gray-200">
+              <img 
+                src={previewUrl} 
+                alt="Preview" 
+                className="w-full object-cover max-h-96"
+              />
+            </div>
+          )}
+
+          {/* Action Buttons */}
+          <div className="flex items-center justify-between">
+            <div className="flex space-x-3">
+              <label className="cursor-pointer flex items-center text-gray-500 hover:text-gray-700">
+                <Camera className="h-5 w-5 mr-1" />
+                Photo
                 <input
                   type="file"
                   accept="image/*"
@@ -113,15 +127,29 @@ const PostCreator = () => {
                   className="hidden"
                 />
               </label>
-              
-              <Button 
-                type="submit" 
-                disabled={isUploading || !image}
-                className="bg-blue-500 hover:bg-blue-600"
+              <button 
+                type="button" 
+                className="flex items-center text-gray-500 hover:text-gray-700"
               >
-                {isUploading ? "Posting..." : "Post"}
-              </Button>
+                <Smile className="h-5 w-5 mr-1" />
+                Feeling
+              </button>
+              <button 
+                type="button" 
+                className="flex items-center text-gray-500 hover:text-gray-700"
+              >
+                <MapPin className="h-5 w-5 mr-1" />
+                Location
+              </button>
             </div>
+            
+            <Button 
+              type="submit" 
+              disabled={isUploading || !image}
+              className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700"
+            >
+              {isUploading ? "Posting..." : "Post"}
+            </Button>
           </div>
         </form>
       </CardContent>
